@@ -8,7 +8,9 @@ typedef enum {
   SINGLE_HOLD,
   DOUBLE_HOLD,
   TRIPLE_HOLD,
-  QUAD_HOLD
+  QUAD_HOLD,
+  SINGLE_TAP,
+  DOUBLE_TAP
 } tappy_dance;
 
 enum {
@@ -114,9 +116,11 @@ const uint16_t PROGMEM encoder_map[][1][2] = {
 tappy_dance cur_dance (qk_tap_dance_state_t *state) {
   switch (state->count) {
     case 1:
-        return SINGLE_HOLD;
+        if (state->interrupted || !state->pressed) return SINGLE_TAP;
+        else return SINGLE_HOLD;
     case 2:
-        return DOUBLE_HOLD;
+        if (state->interrupted || !state->pressed) return DOUBLE_TAP;
+        else return DOUBLE_HOLD;
     case 3:
         return TRIPLE_HOLD;
     case 4:
@@ -157,6 +161,8 @@ static tap xtap_state = {
 void x_finished (qk_tap_dance_state_t *state, void *user_data) {
   xtap_state.state = cur_dance(state);
   switch (xtap_state.state) {
+    case SINGLE_TAP: register_code(KC_F); break;
+    case DOUBLE_TAP: register_code(KC_G); break;
     case SINGLE_HOLD: layer_on(_BASE); break;
     case DOUBLE_HOLD: layer_on(_FN1); break;
     case TRIPLE_HOLD: layer_on(_FN2); break;
@@ -167,6 +173,8 @@ void x_finished (qk_tap_dance_state_t *state, void *user_data) {
 
 void x_reset (qk_tap_dance_state_t *state, void *user_data) {
   switch (xtap_state.state) {
+    case SINGLE_TAP: unregister_code(KC_F); break;
+    case DOUBLE_TAP: unregister_code(KC_G); break;
     case SINGLE_HOLD: layer_off(_BASE); break;
     case DOUBLE_HOLD: layer_off(_FN1); break;
     case TRIPLE_HOLD: layer_off(_FN2); break;
