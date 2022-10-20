@@ -3,26 +3,19 @@
 
 #include QMK_KEYBOARD_H
 
-
-typedef struct {
-  bool is_press_action;
-  int state;
-} tap;
-
 enum {
-  SINGLE_HOLD = 1,
-  DOUBLE_HOLD = 2,
-  TRIPLE_HOLD = 3,
-  QUAD_HOLD = 4
+  X_LAYERS
 };
 
-//Tap dance enums
-enum {
-  X_LAYERS = 0
-};
+typedef enum {
+  TD_NONE,
+  SINGLE_HOLD,
+  DOUBLE_HOLD,
+  TRIPLE_HOLD,
+  QUAD_HOLD
+} tappy_dance;
 
 // Defines names for use in layer keycodes and the keymap
-
 enum layer_names {
   _BASE,
   _FN1,
@@ -30,8 +23,12 @@ enum layer_names {
   _FN3
 };
 
+typedef struct {
+  bool is_press_action;
+  tappy_dance state;
+} tap;
 
-int cur_dance (qk_tap_dance_state_t *state);
+tappy_dance cur_dance (qk_tap_dance_state_t *state);
 
 //for the x tap dance. Put it here so it can be used in any keymap
 void x_finished (qk_tap_dance_state_t *state, void *user_data);
@@ -74,7 +71,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______,  _______, KC_PGUP, KC_HOME, KC_UP,   KC_END,  _______,  _______,
     _______, _______, _______, _______, _______,  _______, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT,           _______,
     _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______,  _______,
-    _______, _______, _______,          _______,           _______,                   _______, _______,  _______
+    _______, _______, _______,          _______,           KC_ENT,                    _______, _______,  _______
     )
 };
 
@@ -114,23 +111,18 @@ const uint16_t PROGMEM encoder_map[][1][2] = {
  * For the third point, there does exist the 'DOUBLE_SINGLE_TAP', however this is not fully tested
  *
  */
-int cur_dance (qk_tap_dance_state_t *state) {
-  if (!state->pressed) {
-    return 8;
-  }
+tappy_dance cur_dance (qk_tap_dance_state_t *state) {
   switch (state->count) {
     case 1:
         return SINGLE_HOLD;
-    break;
     case 2:
         return DOUBLE_HOLD;
-    break;
     case 3:
         return TRIPLE_HOLD;
-    break;
     case 4:
         return QUAD_HOLD;
-    break;
+    default:
+        return TD_NONE;
   }
   /*
   if (state->count == 1) {
@@ -154,7 +146,6 @@ int cur_dance (qk_tap_dance_state_t *state) {
   }
   else return 8; //magic number. At some point this method will expand to work for more presses
   */
- return 8;
 }
 
 //instanalize an instance of 'tap' for the 'x' tap dance.
@@ -170,6 +161,7 @@ void x_finished (qk_tap_dance_state_t *state, void *user_data) {
     case DOUBLE_HOLD: layer_on(_FN1); break;
     case TRIPLE_HOLD: layer_on(_FN2); break;
     case QUAD_HOLD: layer_on(_FN3); break;
+    default: break;
   }
 }
 
@@ -179,6 +171,7 @@ void x_reset (qk_tap_dance_state_t *state, void *user_data) {
     case DOUBLE_HOLD: layer_off(_FN1); break;
     case TRIPLE_HOLD: layer_off(_FN2); break;
     case QUAD_HOLD: layer_off(_FN3); break;
+    default: break;
   }
   xtap_state.state = 0;
 }
