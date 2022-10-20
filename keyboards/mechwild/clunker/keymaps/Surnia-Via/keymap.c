@@ -3,10 +3,6 @@
 
 #include QMK_KEYBOARD_H
 
-enum {
-  X_LAYERS
-};
-
 typedef enum {
   TD_NONE,
   SINGLE_HOLD,
@@ -14,6 +10,10 @@ typedef enum {
   TRIPLE_HOLD,
   QUAD_HOLD
 } tappy_dance;
+
+enum {
+  X_LAYERS
+};
 
 // Defines names for use in layer keycodes and the keymap
 enum layer_names {
