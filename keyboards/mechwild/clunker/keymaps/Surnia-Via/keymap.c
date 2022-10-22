@@ -3,20 +3,6 @@
 
 #include QMK_KEYBOARD_H
 
-typedef enum {
-  TD_NONE,
-  SINGLE_HOLD,
-  DOUBLE_HOLD,
-  TRIPLE_HOLD,
-  QUAD_HOLD,
-  SINGLE_TAP,
-  DOUBLE_TAP
-} tappy_dance;
-
-enum {
-  X_LAYERS
-};
-
 // Defines names for use in layer keycodes and the keymap
 enum layer_names {
   _BASE,
@@ -25,10 +11,24 @@ enum layer_names {
   _FN3
 };
 
+typedef enum {
+  TD_NONE,
+  TD_UNKNOWN,
+  SINGLE_HOLD,
+  DOUBLE_HOLD,
+  TRIPLE_HOLD,
+//  SINGLE_TAP,
+//  DOUBLE_TAP
+} tappy_dance;
+
 typedef struct {
   bool is_press_action;
   tappy_dance state;
 } tap;
+
+enum {
+  X_LAYERS
+};
 
 tappy_dance cur_dance (qk_tap_dance_state_t *state);
 
@@ -52,7 +52,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,   KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,     KC_BSPC,
     KC_LCTL,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,              KC_ENT,
     KC_LSFT,  KC_SLSH, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,   KC_RSFT,
-    MO(_FN3), KC_LGUI, KC_LALT,          X_LAYERS,         KC_SPC,                    KC_RALT, MO(_FN2), KC_RCTL
+    MO(_FN3), KC_LGUI, KC_LALT,          TD(X_LAYERS),         KC_SPC,                    KC_RALT, MO(_FN2), KC_RCTL
     ),
     [_FN1] = LAYOUT(
     KC_GRV,  KC_F1,   KC_F2,   KC_F3,   KC_F4,    KC_F5,   HPT_FBK, HPT_TOG,
@@ -114,74 +114,64 @@ const uint16_t PROGMEM encoder_map[][1][2] = {
  *
  */
 tappy_dance cur_dance (qk_tap_dance_state_t *state) {
-  switch (state->count) {
+    switch (state->count) {
     case 1:
-        if (state->interrupted || !state->pressed) return SINGLE_TAP;
-        else return SINGLE_HOLD;
+        return SINGLE_HOLD;
     case 2:
-        if (state->interrupted || !state->pressed) return DOUBLE_TAP;
-        else return DOUBLE_HOLD;
+        return DOUBLE_HOLD;
     case 3:
         return TRIPLE_HOLD;
-    case 4:
-        return QUAD_HOLD;
     default:
-        return TD_NONE;
+        return TD_UNKNOWN;
   }
   /*
   if (state->count == 1) {
-    if (state->interrupted || !state->pressed)  return 8;
+    if (state->interrupted || !state->pressed)  return SINGLE_TAP;
     //key has not been interrupted, but they key is still held. Means you want to send a 'HOLD'.
     else return SINGLE_HOLD;
   }
   if (state->count == 2) {
-    if (state->interrupted || !state->pressed)  return 8;
+    if (state->interrupted || !state->pressed)  return DOUBLE_TAP;
     //key has not been interrupted, but they key is still held. Means you want to send a 'HOLD'.
     else return DOUBLE_HOLD;
   }
   if (state->count == 3) {
-    if (state->interrupted || !state->pressed)  return 8;
+    if (state->interrupted || !state->pressed)  return TD_UNKNOWN;
     else return TRIPLE_HOLD;
   }
-  if (state->count == 4) {
-    if (state->interrupted || !state->pressed)  return 8;
-    //key has not been interrupted, but they key is still held. Means you want to send a 'HOLD'.
-    else return QUAD_HOLD;
-  }
-  else return 8; //magic number. At some point this method will expand to work for more presses
+  else return TD_UNKNOWN; //magic number. At some point this method will expand to work for more presses
   */
 }
+
 
 //instanalize an instance of 'tap' for the 'x' tap dance.
 static tap xtap_state = {
   .is_press_action = true,
-  .state = 0
+  .state = TD_NONE
 };
 
 void x_finished (qk_tap_dance_state_t *state, void *user_data) {
   xtap_state.state = cur_dance(state);
   switch (xtap_state.state) {
-    case SINGLE_TAP: register_code(KC_F); break;
-    case DOUBLE_TAP: register_code(KC_G); break;
-    case SINGLE_HOLD: layer_on(_BASE); break;
-    case DOUBLE_HOLD: layer_on(_FN1); break;
-    case TRIPLE_HOLD: layer_on(_FN2); break;
-    case QUAD_HOLD: layer_on(_FN3); break;
+//    case SINGLE_TAP: register_code(KC_F); break;
+//    case DOUBLE_TAP: register_code(KC_G); break;
+    case SINGLE_HOLD: layer_on(_FN1); break;
+    case DOUBLE_HOLD: layer_on(_FN2); break;
+    case TRIPLE_HOLD: layer_on(_FN3); break;
     default: break;
   }
 }
 
 void x_reset (qk_tap_dance_state_t *state, void *user_data) {
   switch (xtap_state.state) {
-    case SINGLE_TAP: unregister_code(KC_F); break;
-    case DOUBLE_TAP: unregister_code(KC_G); break;
-    case SINGLE_HOLD: layer_off(_BASE); break;
-    case DOUBLE_HOLD: layer_off(_FN1); break;
-    case TRIPLE_HOLD: layer_off(_FN2); break;
-    case QUAD_HOLD: layer_off(_FN3); break;
+//    case SINGLE_TAP: unregister_code(KC_F); break;
+//    case DOUBLE_TAP: unregister_code(KC_G); break;
+    case SINGLE_HOLD: layer_off(_FN1); break;
+    case DOUBLE_HOLD: layer_off(_FN2); break;
+    case TRIPLE_HOLD: layer_off(_FN3); break;
     default: break;
   }
-  xtap_state.state = 0;
+  xtap_state.state = TD_NONE;
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
