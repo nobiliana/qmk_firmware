@@ -17,7 +17,7 @@ typedef enum {
   SINGLE_HOLD,
   DOUBLE_HOLD,
   TRIPLE_HOLD,
-//  SINGLE_TAP,
+  SINGLE_TAP
 //  DOUBLE_TAP
 } tappy_dance;
 
@@ -72,7 +72,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______,  _______, _______, _______,
     _______, _______, _______, _______, _______,  _______, KC_PGUP, KC_HOME, KC_UP,   KC_END,  _______,  _______,
     _______, _______, _______, _______, _______,  _______, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT,           _______,
-    _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______,  _______,
+    _______, KC_PENT, _______, _______, _______,  _______, _______, _______, _______, _______, _______,  _______,
     _______, _______, _______,          _______,           KC_ENT,                    _______, _______,  _______
     )
 };
@@ -116,7 +116,9 @@ const uint16_t PROGMEM encoder_map[][1][2] = {
 tappy_dance cur_dance (qk_tap_dance_state_t *state) {
     switch (state->count) {
     case 1:
-        return SINGLE_HOLD;
+      if (!state->pressed)  return SINGLE_TAP;
+      //only if key is released and NOT interrupted, but they key is still held. Means you want to send a 'HOLD'. Interrupt should lead to HOLD.
+      else return SINGLE_HOLD;
     case 2:
         return DOUBLE_HOLD;
     case 3:
@@ -153,7 +155,7 @@ static tap xtap_state = {
 void x_finished (qk_tap_dance_state_t *state, void *user_data) {
   xtap_state.state = cur_dance(state);
   switch (xtap_state.state) {
-//    case SINGLE_TAP: register_code(KC_F); break;
+    case SINGLE_TAP: register_code(KC_SPC); break;
 //    case DOUBLE_TAP: register_code(KC_G); break;
     case SINGLE_HOLD: layer_on(_FN1); break;
     case DOUBLE_HOLD: layer_on(_FN2); break;
@@ -164,7 +166,7 @@ void x_finished (qk_tap_dance_state_t *state, void *user_data) {
 
 void x_reset (qk_tap_dance_state_t *state, void *user_data) {
   switch (xtap_state.state) {
-//    case SINGLE_TAP: unregister_code(KC_F); break;
+    case SINGLE_TAP: unregister_code(KC_SPC); break;
 //    case DOUBLE_TAP: unregister_code(KC_G); break;
     case SINGLE_HOLD: layer_off(_FN1); break;
     case DOUBLE_HOLD: layer_off(_FN2); break;
