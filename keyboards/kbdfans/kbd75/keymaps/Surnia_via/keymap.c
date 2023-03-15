@@ -1,5 +1,4 @@
 #include QMK_KEYBOARD_H
-#define TAPPING_TOGGLE 2
 
 typedef enum {
   TD_NONE,
@@ -104,18 +103,18 @@ static tap xtap_state = {
 void x_finished (qk_tap_dance_state_t *state, void *user_data) {
   xtap_state.state = cur_dance(state);
   switch (xtap_state.state) {
-    case SINGLE_HOLD: layer_on(_FN1); break;
-    case DOUBLE_HOLD: layer_on(_FN2); break;
-    case TRIPLE_HOLD: layer_on(_FN3); break;
+    case SINGLE_HOLD: layer_on(1); break;
+    case DOUBLE_HOLD: layer_on(2); break;
+    case TRIPLE_HOLD: layer_on(3); break;
     default: break;
   }
 }
 
 void x_reset (qk_tap_dance_state_t *state, void *user_data) {
   switch (xtap_state.state) {
-    case SINGLE_HOLD: layer_off(_FN1); break;
-    case DOUBLE_HOLD: layer_off(_FN2); break;
-    case TRIPLE_HOLD: layer_off(_FN3); break;
+    case SINGLE_HOLD: layer_off(1); break;
+    case DOUBLE_HOLD: layer_off(2); break;
+    case TRIPLE_HOLD: layer_off(3); break;
     default: break;
   }
   xtap_state.state = TD_NONE;
