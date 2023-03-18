@@ -10,8 +10,11 @@
 #define MATRIX_COLS 6
 
 /* Cirque Touchpad Settings */
+#define CIRQUE_PINNACLE_CURVED_OVERLAY
+
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #define CIRQUE_PINNACLE_ATTENUATION EXTREG__TRACK_ADCCONFIG__ADC_ATTENUATE_2X
+#define POINTING_DEVICE_GESTURES_CURSOR_GLIDE_ENABLE
 
 /* Define custom font */
 #define OLED_FONT_H "keyboards/mechwild/sugarglider/glcdfont.c"
@@ -22,8 +25,7 @@
 /* TAPPING_TERM value is used for the CIRQUE_PINNACLE_TAPPING_TERM as well by default
  * defining it this way allows us to easily modify it with DYNAMIC_TAPPING_TERM_ENABLE
  */
-#define TAPPING_TERM 0
-#define CIRQUE_PINNACLE_TAP_ENABLE
+#define TAPPING_TERM 165
 #define POINTING_DEVICE_GESTURES_SCROLL_ENABLE
 
 /* spi config */
