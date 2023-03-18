@@ -4,7 +4,7 @@
 
 This is Surnia's Keymap setup. COLEMAK DH is the primary map, and a qwerty map is defined as well. The map is VIA enabled. 
 
-* [Keymap: ](http://www.keyboard-layout-editor.com/#/gists/8de81be187c12512f1ce66ae676c5716)
+* Keymap: [KLE Link](http://www.keyboard-layout-editor.com/#/gists/8de81be187c12512f1ce66ae676c5716)
 * Hardware Availability: [Sugar Glider on MechWild](https://mechwild.com/product/sugar-glider/)
 
 Customizations that are done:
