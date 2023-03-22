@@ -1,7 +1,16 @@
 // Copyright 2023 Kyle McCreery
+// Copyright 2023 nobiliana aka. Surnia
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include QMK_KEYBOARD_H
+
+// kinetic variables
+extern int16_t xVal, yVal;
+extern int8_t LIFTOFF; 
+extern int32_t frictionMultiplier;
+extern void kineticCirque(report_mouse_t *mouse_report);
+
+#include "drivers/sensors/cirque_pinnacle.h"
 
 // Defines names for use in layer keycodes and the keymap
 enum layer_names {
@@ -12,7 +21,6 @@ enum layer_names {
   _NAV,
   _BROWSER
 };
-
 
 enum td_keycodes {
   LAYL, //left layer switcher. 
@@ -58,7 +66,9 @@ void MSM_reset (tap_dance_state_t *state, void *user_data);
 
 enum custom_keycodes {
   MS_LTR, //Left click primary (ms1), becomes right click (ms2) if x_layright is held
-  MS_RTL  //right click primary (ms2), becomes left click (ms1) if x_layright is held
+  MS_RTL,  //right click primary (ms2), becomes left click (ms1) if x_layright is held
+  kineticBrake, //kinetic functions
+  kineticGlide //kinetic functions
 };
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
@@ -70,7 +80,36 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         default:
             return g_tapping_term;
     }
-}
+};
+/*
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+        pinnacle_data_t cirqueData = cirque_pinnacle_read_data();
+//        uprintf("x: %i, y: %i, z: %i\n", cirqueData.xValue, cirqueData.yValue, cirqueData.zValue);
+        cirque_pinnacle_scale_data(&cirqueData, cirque_pinnacle_get_scale(), cirque_pinnacle_get_scale());
+//        uprintf("x: %i, y: %i, z: %i\n", cirqueData.xValue, cirqueData.yValue, cirqueData.zValue);
+
+    //KINETIC MOTION
+
+            if (cirqueData.zValue){//records last mouse input prior to liftoff. 
+                if (cirqueData.xValue !=0 || cirqueData.yValue !=0){
+                    xVal = cirqueData.xValue;
+                    yVal = cirqueData.yValue;
+                }
+                LIFTOFF = 0;
+                //uprintf("xVal: %i, yVal: %i, Liftoff: %i || mouse x: %i, mouse: y %i\n", xVal, yVal, LIFTOFF, mouse_report.x, mouse_report.y);
+            } else if (!cirqueData.zValue) {
+                LIFTOFF = 1;
+                //uprintf("lift detected!: %i, xVal: %i, yVal %i\n", LIFTOFF, xVal, yVal);
+            }
+        kineticCirque(&mouse_report);
+
+    //RADIAL KEYS
+
+
+    return mouse_report;
+};
+
+*/
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_COLEDH] = LAYOUT(                                                            
@@ -86,13 +125,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
              KC_TRNS,    KC_TRNS, KC_TRNS,    KC_TRNS, KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS, KC_TRNS, KC_TRNS,          KC_TRNS       
   ),
   [_NUMS] = LAYOUT(      //numbers                                            
-    KC_TRNS, KC_ESC,  KC_TRNS, KC_PGUP, KC_GRV,     KC_5,                   DPI_UP,           KC_P7,   KC_P8,   KC_P9,   KC_P0,   KC_PENT,  KC_DEL,         
+    KC_TRNS, KC_ESC,  KC_TRNS, KC_PGUP, KC_GRV, kineticBrake,               DPI_UP,           KC_P7,   KC_P8,   KC_P9,   KC_P0,   KC_PENT,  KC_DEL,         
     KC_TRNS, KC_TRNS, KC_HOME, KC_PGDN, KC_END, DPI_FINE,         KC_TRNS,  DPI_DN,           KC_P4,   KC_P5,   KC_P6,   KC_PPLS, KC_PAST, KC_BSLS,
     KC_TRNS, KC_INS,  KC_SLSH, KC_MINS, KC_EQL,   KC_DEL,                   KC_TRNS,          KC_P1,   KC_P2,   KC_P3,   KC_PMNS, KC_PSLS, KC_TRNS,
-             KC_TRNS,    KC_TRNS, KC_TRNS,    KC_TRNS, KC_TRNS,   KC_TRNS,    KC_TRNS,    KC_TRNS, KC_TRNS, KC_TRNS,          KC_TRNS       
+             KC_TRNS,    KC_TRNS, KC_TRNS,    KC_TRNS, KC_TRNS,   KC_TRNS,    KC_TRNS,    KC_TRNS, KC_PDOT, KC_TRNS,          KC_TRNS       
   ),                                                                                                                 
   [_FKEYS] = LAYOUT(      //Fs                                                                                           
-    KC_TRNS, KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_PERC,                   KC_TRNS,          KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_LBRC, KC_NUM,
+    KC_TRNS, KC_F9,   KC_F10,  KC_F11,  KC_F12,  kineticGlide,              KC_TRNS,          KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_LBRC, KC_NUM,
     KC_TRNS, KC_F5,   KC_F6,   KC_F7,   KC_F8,    KC_ENT,          KC_TRNS, KC_TRNS,          KC_DLR,  KC_PERC, KC_CIRC, KC_QUOT, KC_RBRC, KC_CAPS,
     KC_TRNS, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_BSPC,                   KC_TRNS,          KC_EXLM, KC_AT,   KC_HASH, KC_PSCR, KC_SCRL, KC_TRNS,
               KC_TRNS,    KC_TRNS, KC_TRNS,    KC_TRNS, KC_TRNS,   KC_TRNS,    KC_TRNS,    KC_TRNS, KC_TRNS, KC_TRNS,          KC_TRNS       
@@ -167,7 +206,7 @@ tappy_dance MSMD_dance (tap_dance_state_t *state) {
     default:
         return TD_UNKNOWN;
   }
-}
+};
 
 tappy_dance LAYL_dance (tap_dance_state_t *state) {
     switch (state->count) {
@@ -180,7 +219,7 @@ tappy_dance LAYL_dance (tap_dance_state_t *state) {
     default:
         return TD_UNKNOWN;
   }
-}
+};
 
 tappy_dance LAYR_dance (tap_dance_state_t *state) {
     switch (state->count) {
@@ -210,7 +249,7 @@ tappy_dance LAYR_dance (tap_dance_state_t *state) {
   }
   else return TD_UNKNOWN; //magic number. At some point this method will expand to work for more presses
   */
-}
+};
 
 static tap mtap_state = {
   .is_press_action = true,
@@ -311,7 +350,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } else {
             // when keycode is released
         }
-      break;
+        break;
 
       case MS_RTL:
         if (record->event.pressed) {
@@ -324,9 +363,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             // when keycode is released
         }
         break;
+
+      case kineticBrake:
+          if (record->event.pressed) {
+              frictionMultiplier = 500;
+          } else {
+              frictionMultiplier = 100;
+          }
+        break;
+      case kineticGlide:
+          if (record->event.pressed) {
+              frictionMultiplier = 5;
+          } else {
+              frictionMultiplier = 100;
+          }
+        break;
     }
   return true;
-};
+}
 
 void post_process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {

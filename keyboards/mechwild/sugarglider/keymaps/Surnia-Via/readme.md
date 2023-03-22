@@ -1,6 +1,6 @@
 # Surnia's Sugar Glider
 
-![mechwild/sugarglider](https://i.imgur.com/IYhOU3xh.jpg)
+![mechwild/sugarglider](https://i.imgur.com/mSPmynX.jpg)
 
 This is Surnia's Keymap setup. COLEMAK DH is the primary map, and a qwerty map is defined as well. The map is VIA enabled. 
 
@@ -17,3 +17,7 @@ Customizations that are done:
 * Middle mouse click is set with dual tap dance, access to Browser layer. Left click is back, Right click is forward. 
 * If Right layer key is used, the mouse clicks will switch and the left becomes right click. This does not affect the BROWSER layer. 
 * Left alt is tap danced with GUI. 2 taps for GUI. 
+
+* Edge scroll was tweaked to actuate more frequently. cirque_pinnacle_gestures.c, line 64 was adjusted from a stock value of 18 ticks per revolution, to 30. 
+
+* 

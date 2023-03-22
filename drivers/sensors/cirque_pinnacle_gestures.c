@@ -61,7 +61,7 @@ void cirque_pinnacle_enable_tap(bool enable) {
 static circular_scroll_context_t scroll = {.config = {.outer_ring_pct = 33,
                                                       .trigger_px     = 16,
                                                       .trigger_ang    = 9102, /* 50 degrees */
-                                                      .wheel_clicks   = 18}};
+                                                      .wheel_clicks   = 30}};
 
 static inline uint16_t atan2_16(int32_t dy, int32_t dx) {
     if (dy == 0) {

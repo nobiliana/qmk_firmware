@@ -14,7 +14,6 @@
 
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #define CIRQUE_PINNACLE_ATTENUATION EXTREG__TRACK_ADCCONFIG__ADC_ATTENUATE_2X
-#define POINTING_DEVICE_GESTURES_CURSOR_GLIDE_ENABLE
 
 /* Define custom font */
 #define OLED_FONT_H "keyboards/mechwild/sugarglider/glcdfont.c"
