@@ -243,10 +243,6 @@ tappy_dance LAYR_dance (tap_dance_state_t *state) {
     //key has not been interrupted, but they key is still held. Means you want to send a 'HOLD'.
     else return DOUBLE_HOLD;
   }
-  if (state->count == 3) {
-    if (state->interrupted || !state->pressed)  return TD_UNKNOWN;
-    else return TRIPLE_HOLD;
-  }
   else return TD_UNKNOWN; //magic number. At some point this method will expand to work for more presses
   */
 };
