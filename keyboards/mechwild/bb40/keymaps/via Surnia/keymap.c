@@ -12,11 +12,6 @@ enum layer_names {
 };
 
 
-enum td_keycodes {
-  LAYL, //left layer switcher. 
-  LAYR //right layer switcher.
-};
-
 typedef enum {
   TD_NONE,
   TD_UNKNOWN,
@@ -34,6 +29,12 @@ typedef struct {
   bool is_press_action;
   tappy_dance state;
 } tap;
+
+enum td_keycodes {
+  LAYL = QK_KB, //left layer switcher. 
+  LAYR //right layer switcher.
+};
+
 
 tappy_dance LAYL_dance (tap_dance_state_t *state);
 tappy_dance LAYR_dance (tap_dance_state_t *state);
