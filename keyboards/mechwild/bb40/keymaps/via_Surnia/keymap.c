@@ -31,7 +31,7 @@ typedef struct {
 } tap;
 
 enum td_keycodes {
-  LAYL = QK_KB, //left layer switcher. 
+  LAYL, //left layer switcher. 
   LAYR //right layer switcher.
 };
 
