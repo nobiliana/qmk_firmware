@@ -84,17 +84,17 @@ Lower Thumb, Scroll click, Upper thumb,
 */
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT( KC_ENT , KC_BTN4, TD(LAYR), TD(LAYL), 
-                  KC_BTN1,                    KC_BTN2 ),
+    [0] = LAYOUT( TD(LAYR), KC_BTN4, DRAG_SCROLL, KC_BTN3, 
+                  KC_BTN1,                        KC_BTN2 ),
 
-    [1] = LAYOUT( _______, KC_BTN5, KC_TRNS,  KC_TRNS, 
-                  _______,                    _______ ),
+    [1] = LAYOUT( KC_TRNS,  KC_BTN5, KC_TRNS,     KC_TRNS, 
+                  KC_ENT,                       _______ ),
 
-    [2] = LAYOUT( _______, _______, KC_TRNS,  KC_TRNS, 
-                  _______,                    _______ ),
+    [2] = LAYOUT( KC_TRNS,  _______, KC_TRNS,     KC_TRNS, 
+                  _______,                       _______ ),
 
-    [3] = LAYOUT( _______, _______, KC_TRNS,  KC_TRNS, 
-                  _______,                    _______ )
+    [3] = LAYOUT( KC_TRNS,  _______, KC_TRNS,     KC_TRNS, 
+                  _______,                       _______ )
 };
 
 tappy_dance LAYL_dance (tap_dance_state_t *state) {
@@ -145,7 +145,7 @@ void LL_finished (tap_dance_state_t *state, void *user_data) {
   switch (ltap_state.state) {
     case SINGLE_TAP: register_code(KC_BTN3); break;
 //    case DOUBLE_TAP: register_code(KC_G); break;
-    case L1_HOLD: register_code(DRAG_SCROLL); break;
+    case L1_HOLD: register_code(KC_F); break;
     case L2_HOLD: register_code(DPI_FINE); break;
     default: break;
   }
@@ -154,7 +154,7 @@ void LL_reset (tap_dance_state_t *state, void *user_data) {
   switch (ltap_state.state) {
     case SINGLE_TAP: unregister_code(KC_BTN3); break;
 //    case DOUBLE_TAP: unregister_code(KC_G); break;
-    case L1_HOLD: unregister_code(DRAG_SCROLL); break;
+    case L1_HOLD: unregister_code(KC_F); break;
     case L2_HOLD: unregister_code(DPI_FINE); break;
     default: break;
   }
