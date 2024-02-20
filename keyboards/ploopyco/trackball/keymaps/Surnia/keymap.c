@@ -66,6 +66,9 @@ Lower Thumb, Scroll click, Upper thumb,
   Middle right, far right.
 
   Default functionality:
+  Button 1 = Left
+  Button 2 = Right
+  Button 3 = Middle
   Button 4 = back
   Button 5 = foward
 */
