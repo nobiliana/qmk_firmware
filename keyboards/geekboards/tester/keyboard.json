@@ -50,8 +50,7 @@
             "solid_reactive_nexus": true,
             "solid_reactive_multinexus": true
         },
-        "driver": "is31fl3731",
-        "sleep": true
+        "driver": "is31fl3731"
     },
     "features": {
         "bootmagic": true,

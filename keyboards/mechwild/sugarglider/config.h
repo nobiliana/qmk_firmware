@@ -3,18 +3,28 @@
 
 #pragma once
 
+#define DYNAMIC_KEYMAP_LAYER_COUNT 6
+
 /* Matrix COL and ROW definitions */
 #define MATRIX_ROWS 9
 #define MATRIX_COLS 6
 
 /* Cirque Touchpad Settings */
+#define CIRQUE_PINNACLE_CURVED_OVERLAY
+
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #define CIRQUE_PINNACLE_ATTENUATION EXTREG__TRACK_ADCCONFIG__ADC_ATTENUATE_2X
 
 /* Define custom font */
 #define OLED_FONT_H "keyboards/mechwild/sugarglider/glcdfont.c"
 
-#define CIRQUE_PINNACLE_TAP_ENABLE
+/* allows the "key" button on the blackpill to toggle caps lock for user testing before soldering */
+#define DIP_SWITCH_PINS { A0 }
+
+/* TAPPING_TERM value is used for the CIRQUE_PINNACLE_TAPPING_TERM as well by default
+ * defining it this way allows us to easily modify it with DYNAMIC_TAPPING_TERM_ENABLE
+ */
+#define TAPPING_TERM 165
 #define POINTING_DEVICE_GESTURES_SCROLL_ENABLE
 
 /* spi config */

@@ -16,5 +16,19 @@
 
 #pragma once
 
-#define OLED_DISPLAY_128X64
-#define SPLIT_OLED_ENABLE
+// `SPLIT_HAND_PIN` can currently be defined in `info.json`,
+// but can't yet be given a value
+#define SPLIT_HAND_PIN B5
+
+// Not yet available in `info.json`
+#ifdef OLED_ENABLE
+#    define OLED_DISPLAY_128X64
+#    define SPLIT_OLED_ENABLE
+#endif
+
+// Not yet available in `info.json`
+#ifdef RGB_MATRIX_ENABLE
+#    define RGB_MATRIX_LED_COUNT 62
+#    define RGB_MATRIX_SPLIT { 31, 31 }
+#    define SPLIT_TRANSPORT_MIRROR
+#endif

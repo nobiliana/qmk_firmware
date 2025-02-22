@@ -19,10 +19,7 @@
         "rgb_matrix": true
     },
     "split": {
-        "enabled": true,
-        "serial": {
-            "driver": "vendor"
-        }
+        "enabled": true
     },
     "diode_direction": "COL2ROW",
     "matrix_pins": {

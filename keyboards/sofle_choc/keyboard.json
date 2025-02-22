@@ -118,9 +118,7 @@
     },
     "split": {
         "enabled": true,
-        "serial": {
-            "pin": "D2"
-        },
+        "soft_serial_pin": "D2",
         "encoder": {
             "right": {
                 "rotary": [

@@ -17,7 +17,6 @@
     },
     "processor": "STM32F103",
     "bootloader": "custom",
-    "community_layouts": ["ergodox"],
     "layouts": {
         "LAYOUT_ergodox": {
             "layout": [

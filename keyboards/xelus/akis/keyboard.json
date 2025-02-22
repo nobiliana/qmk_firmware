@@ -21,9 +21,6 @@
             "rgb_test": true,
             "alternating": true,
             "twinkle": true
-        },
-        "default": {
-            "animation": "rgb_test"
         }
     },
     "ws2812": {

@@ -42,9 +42,6 @@
         "enabled": true,
         "handedness": {
             "pin": "GP18"
-        },
-        "serial": {
-            "driver": "vendor"
         }
     },
     "tags": ["split"],

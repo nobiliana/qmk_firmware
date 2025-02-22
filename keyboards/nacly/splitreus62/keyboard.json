@@ -30,12 +30,7 @@
     "diode_direction": "ROW2COL",
     "split": {
       "enabled": true,
-      "handedness": {
-        "pin": "F4"
-      },
-      "serial": {
-        "pin": "D0"
-      }
+      "soft_serial_pin": "D0"
     },
     "rgblight": {
       "led_count": 12,

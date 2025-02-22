@@ -5,11 +5,11 @@
 
 #ifndef GLIDEPOINT_DPI_OPTIONS
 #    define GLIDEPOINT_DPI_OPTIONS \
-        { 400, 800, 1200, 1600, 2000, 2400, 2800, 3200, 3600, 4000 }
+        { 400, 800, 1200, 1400, 1600, 2000, 2400, 2800, 3200, 3600, 4000 }
 #endif
 
 #ifndef GLIDEPOINT_DPI_DEFAULT
-#    define GLIDEPOINT_DPI_DEFAULT 1
+#    define GLIDEPOINT_DPI_DEFAULT 3
 #endif
 
 keyboard_config_t keyboard_config;
@@ -19,14 +19,14 @@ uint16_t          dpi_array[] = GLIDEPOINT_DPI_OPTIONS;
 void board_init(void) {
     // B9 is configured as I2C1_SDA in the board file; that function must be
     // disabled before using B7 as I2C1_SDA.
-    gpio_set_pin_input_high(B9);
-    gpio_set_pin_output(B12);
-    gpio_set_pin_output(B13);
-    gpio_set_pin_output(B14);
-    gpio_write_pin_low(B12);
-    gpio_write_pin_low(B13);
-    gpio_write_pin_low(B14);
-    gpio_set_pin_output(C13);
+    setPinInputHigh(B9);
+    setPinOutput(B12);
+    setPinOutput(B13);
+    setPinOutput(B14);
+    writePinLow(B12);
+    writePinLow(B13);
+    writePinLow(B14);
+    setPinOutput(C13);
 }
 
 #ifdef DYNAMIC_TAPPING_TERM_ENABLE
@@ -110,10 +110,10 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
 bool led_update_kb(led_t led_state) {
     bool res = led_update_user(led_state);
     if(res) {
-        gpio_write_pin(B12, led_state.num_lock);     // Updates status LEDs
-        gpio_write_pin(B13, led_state.caps_lock);    // Updates status LEDs
-        gpio_write_pin(B14, led_state.scroll_lock);  // Updates status LEDs
-        gpio_write_pin(C13, !led_state.caps_lock);   // Updates status LEDs, this is the LED on the blackpill itself
+        writePin(B12, led_state.num_lock);     // Updates status LEDs
+        writePin(B13, led_state.caps_lock);    // Updates status LEDs
+        writePin(B14, led_state.scroll_lock);  // Updates status LEDs
+        writePin(C13, !led_state.caps_lock);   // Updates status LEDs, this is the LED on the blackpill itself
     }
     return res;
 }
@@ -204,27 +204,30 @@ bool oled_task_kb(void) {
         oled_set_cursor(8,1);
         switch (get_highest_layer(layer_state)) {
             case 0:
-                oled_write_P(PSTR("Base  "), false);
+                oled_write_P(PSTR("COLDH"), false);
                 break;
             case 1:
-                oled_write_P(PSTR("Lower "), false);
+                oled_write_P(PSTR("QWERT"), false);
                 break;
             case 2:
-                oled_write_P(PSTR("Raise "), false);
+                oled_write_P(PSTR("Nums "), false);
                 break;
             case 3:
-                oled_write_P(PSTR("Adjust"), false);
+                oled_write_P(PSTR("F Key"), false);
                 break;
             case 4:
-                oled_write_P(PSTR("Mouse "), false);
+                oled_write_P(PSTR("Navs "), false);
+                break;
+            case 5:
+                oled_write_P(PSTR("Brwsr"), false);
                 break;
 #ifdef STENO_ENABLE
             case 5:
-                oled_write_P(PSTR("Steno Layer"), false);
+                oled_write_P(PSTR("Steno"), false);
                 break;
 #endif
             default:
-                oled_write_P(PSTR("Layer ?"), false);    // Should never display, here as a catchall
+                oled_write_P(PSTR("?????"), false);    // Should never display, here as a catchall
         }
         led_t led_state = host_keyboard_led_state();
         oled_set_cursor(8,0);
@@ -264,19 +267,22 @@ bool oled_task_kb(void) {
     oled_set_cursor(0,5);
     switch (get_highest_layer(layer_state)) {
         case 0:
-            oled_write_P(PSTR("Base "), false);
+            oled_write_P(PSTR("COLDH"), false);
             break;
         case 1:
-            oled_write_P(PSTR("Lower"), false);
+            oled_write_P(PSTR("QWERT"), false);
             break;
         case 2:
-            oled_write_P(PSTR("Raise"), false);
+            oled_write_P(PSTR("Nums "), false);
             break;
         case 3:
-            oled_write_P(PSTR("Adjst"), false);
+            oled_write_P(PSTR("F Key"), false);
             break;
         case 4:
-            oled_write_P(PSTR("Mouse"), false);
+            oled_write_P(PSTR("Navs "), false);
+            break;
+        case 5:
+            oled_write_P(PSTR("Brwsr"), false);
             break;
 #ifdef STENO_ENABLE
         case 5:

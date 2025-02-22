@@ -27,11 +27,6 @@
             "resync": true
         }
     },
-    "indicators": {
-        "caps_lock": "B1",
-        "num_lock": "B0",
-        "scroll_lock": "C5"
-    },
     "rgblight": {
         "saturation_steps": 8,
         "brightness_steps": 8,

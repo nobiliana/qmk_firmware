@@ -24,7 +24,7 @@ void eeconfig_init_kb(void) {
     eeconfig_update_kb(0);
     eeconfig_init_user();
 }
-
+/*
 bool encoder_update_kb(uint8_t index, bool clockwise) {
     if (!encoder_update_user(index, clockwise)) { return false; }
     if (index == 0) {
@@ -42,3 +42,4 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
     }
     return false;
 }
+*/

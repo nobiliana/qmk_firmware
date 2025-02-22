@@ -16,5 +16,9 @@
 
 #pragma once
 
+#define SPLIT_HAND_PIN F4
+
 #define OLED_DISPLAY_128X32
 #define SPLIT_OLED_ENABLE
+
+#define RGB_MATRIX_LED_COUNT 70

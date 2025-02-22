@@ -45,9 +45,7 @@
                 "rows": ["F4", "F5", "F6", "F7", "B1"]
             }
         },
-        "serial": {
-            "pin": "D2"
-        }
+        "soft_serial_pin": "D2"
     },
     "url": "",
     "usb": {

@@ -24,9 +24,7 @@
     },
     "diode_direction": "COL2ROW",
     "split": {
-        "serial": {
-            "pin": "D2"
-        }
+        "soft_serial_pin": "D2"
     },
     "tapping": {
         "term": 120

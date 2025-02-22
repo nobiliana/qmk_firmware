@@ -21,9 +21,7 @@
     },
     "split": {
         "enabled": true,
-        "serial": {
-            "pin": "D2"
-        },
+        "soft_serial_pin": "D2",
         "usb_detect": {
             "enabled": true,
             "timeout": 2500

@@ -21,10 +21,7 @@
         "matrix": [0, 1]
     },
     "split": {
-        "enabled": true,
-        "serial": {
-            "driver": "usart"
-        }
+        "enabled": true
     },
     "layouts": {
         "LAYOUT": {

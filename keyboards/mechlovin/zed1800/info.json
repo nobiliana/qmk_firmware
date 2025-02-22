@@ -12,10 +12,14 @@
     },
     "processor": "STM32F103",
     "bootloader": "stm32duino",
-    "eeprom": {
-        "wear_leveling": {
-            "backing_size": 4096
-        }
+    "features": {
+        "bootmagic": true,
+        "command": true,
+        "console": true,
+        "extrakey": true,
+        "mousekey": true,
+        "rgblight": true,
+        "audio": false
     },
     "rgblight": {
         "sleep": true,

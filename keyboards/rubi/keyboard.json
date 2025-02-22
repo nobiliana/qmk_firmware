@@ -22,9 +22,6 @@
             "resync": true
         }
     },
-   "indicators": {
-      "caps_lock": "C6"
-   },
    "build": {
       "lto": true
    },
