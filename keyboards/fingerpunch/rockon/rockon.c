@@ -68,7 +68,7 @@ report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
             mouse_report_x_temp += valx;
             drag_scroll_x_semaphore -= valx;
 
-            if (abs(drag_scroll_x_semaphore) >= PLOOPY_DRAGSCROLL_SEMAPHORE) {
+            if (abs(drag_scroll_x_semaphore) >= PLOOPY_DRAGSCROLL_SEMAPHORE*3) { //decrease sensitivity for X scroll?
                 mouse_report_x_calc -= valx;
                 drag_scroll_x_semaphore = 0;
             }
