@@ -66,6 +66,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONVERT_TO_KB2040
   // If we have audio enabled, that means we're not using the center encoder, as they share a pin on the controller
   // Note that you need to solder the jumper on the pcb and remove teh audio buzzer from the pcb if using the center encoder
+  
   #ifdef AUDIO_ENABLE
       #define ENCODERS_PAD_A {C7, D5}
       #define ENCODERS_PAD_B {D2, B7}
@@ -73,7 +74,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       #define ENCODERS_PAD_A {C7, D5, F1}
       #define ENCODERS_PAD_B {D2, B7, F0}
   #endif
-
+  
   #ifdef AUDIO_ENABLE
       #define AUDIO_VOICES
       #define AUDIO_PIN F1
@@ -125,11 +126,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   #define I2C1_DUTY_CYCLE FAST_DUTY_CYCLE_2
 #endif
 
-#ifdef FP_TRACKBALL_ENABLE
+//#ifdef FP_TRACKBALL_ENABLE
   // Trackball config
   #define PMW33XX_CS_PIN B5
   #define PMW33XX_CS_DIVISOR 8 // needs to be the same as the SHIFTREG_DIVISOR above
   #define POINTING_DEVICE_INVERT_Y
-#endif
+//#endif
 
 #include "keyboards/fingerpunch/src/config_post.h"

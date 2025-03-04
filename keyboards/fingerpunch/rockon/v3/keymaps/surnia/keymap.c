@@ -12,28 +12,12 @@ enum layer_names {
 
 enum custom_keycodes {
     QWERTY = SAFE_RANGE,
-    DPI_FINE,
+    DRAG_SCROLL,
     MS_LTR, //Left click primary (ms1), becomes right click (ms2) if x_layright is held
     MS_RTL,  //right click primary (ms2), becomes left click (ms1) if x_layright is held
-};
-
-//dragscroll enable
-extern bool is_drag_scroll;
-
-enum keyboard_keycodes {
-};
-
-bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    switch(keycode) {
-        case DPI_FINE:
-            if (record->event.pressed) {
-                pointing_device_set_cpi(dpi_array[0]);
-            } else {
-                pointing_device_set_cpi(dpi_array[keyboard_config.dpi_config]);
-            }
-            break;
-    }
-    return true;
+    RGB_STR,    //starlight dual hue macro
+    RGB_SPA,    //splash 
+    RGB_REA     //solid reactive
 };
 
 enum td_keycodes {
@@ -77,6 +61,40 @@ enum td_keycodes {
   void MS_finished (tap_dance_state_t *state, void *user_data);
   void MS_reset (tap_dance_state_t *state, void *user_data);
 
+
+bool set_scrolling = false;
+
+// Modify these values to adjust the scrolling speed
+#define SCROLL_DIVISOR_H 12.0
+#define SCROLL_DIVISOR_V 4.0
+
+// Variables to store accumulated scroll values
+float scroll_accumulated_h = 0;
+float scroll_accumulated_v = 0;
+
+// Function to handle mouse reports and perform drag scrolling
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+    // Check if drag scrolling is active
+    if (set_scrolling) {
+        // Calculate and accumulate scroll values based on mouse movement and divisors
+        scroll_accumulated_h += (float)mouse_report.x / SCROLL_DIVISOR_H;
+        scroll_accumulated_v += (float)mouse_report.y / SCROLL_DIVISOR_V;
+
+        // Assign integer parts of accumulated scroll values to the mouse report
+        mouse_report.h = (int8_t)scroll_accumulated_h;
+        mouse_report.v = (int8_t)scroll_accumulated_v;
+
+        // Update accumulated scroll values by subtracting the integer parts
+        scroll_accumulated_h -= (int8_t)scroll_accumulated_h;
+        scroll_accumulated_v -= (int8_t)scroll_accumulated_v;
+
+        // Clear the X and Y values of the mouse report
+        mouse_report.x = 0;
+        mouse_report.y = 0;
+    }
+    return mouse_report;
+}
+
 // All the KC_MUTE keycodes below represent the encoders. If you aren't using encoders, you can ignore these:
 //            -->  KC_MUTE,   KC_LCTL,   KC_LGUI,   LOWER,     KC_SPC,    KC_LALT,   KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3,    KC_RALT,   KC_SPC,    RAISE,     KC_RGUI,   KC_RCTL,   KC_MUTE, <--
 //                                                                                            --> KC_MUTE <--
@@ -107,7 +125,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRNS,   _______,   _______,   KC_PGUP,   KC_GRV,    _______,   _______,                                          C(KC_C),   KC_P7,     KC_P8,     KC_P9,     KC_P0,     KC_PENT,   KC_DEL,
     KC_TRNS,   _______,   KC_HOME,   KC_PGDN,   KC_END,    _______,   _______,                                          C(KC_V),   KC_P4,     KC_P5,     KC_P6,     KC_PPLS,   KC_PAST,   KC_BSLS,
     KC_TRNS,   _______,   KC_SLSH,   KC_MINS,   KC_EQL,    KC_DEL,    _______,                                          C(KC_F),   KC_P1,     KC_P2,     KC_P3,     KC_PMNS,   KC_PSLS,   KC_TRNS,
-               _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______,    _______,       _______,   _______,   _______,   _______,   _______,   _______,
+               _______,   _______,   _______,   _______,   _______,   KC_TRNS,   _______,    KC_TRNS,    _______,       KC_TRNS,   _______,   _______,   _______,   _______,   _______,
                                                                                              _______
 ),
 
@@ -116,16 +134,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRNS,   KC_F9,     KC_F10,    KC_F11,    KC_F12,    _______,   _______,                                          _______,   KC_AMPR,   KC_ASTR,   KC_LPRN,   KC_RPRN,   KC_LBRC,   KC_NUM,
     KC_TRNS,   KC_F5,     KC_F6,     KC_F7,     KC_F8,     KC_ENT,    _______,                                          _______,   KC_DLR,    KC_PERC,   KC_CIRC,   KC_QUOT,   KC_RBRC,   KC_CAPS,
     KC_TRNS,   KC_F1,     KC_F2,     KC_F3,     KC_F4,     KC_BSPC,   _______,                                          _______,   KC_EXLM,   KC_AT,     KC_HASH,   KC_PSCR,   KC_INS,    KC_TRNS,
-               _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______,    _______,       _______,   _______,   _______,   _______,   _______,   _______,
+               _______,   _______,   _______,   _______,   _______,   KC_TRNS,   _______,    KC_TRNS,    _______,       KC_TRNS,   _______,   _______,   _______,   _______,   _______,
                                                                                              _______
 ),
 
 [_ADJUST] =  LAYOUT_rockon( //LED left, nav right?
-    KC_TRNS,   _______,   _______,   _______,   _______,   _______,   DF(_QWERTY),                                      _______,   _______,   _______,   _______,   _______,   _______,   KC_TRNS,
-    KC_TRNS,   _______,   _______,   _______,   _______,   _______,   DF(_COLEMAK),                                     _______,   _______,   _______,   _______,   _______,   _______,   KC_TRNS,
+    KC_TRNS,   RM_HUEU,   RM_SATU,   RM_VALU,   RM_SPDU,   RM_NEXT,   DF(_QWERTY),                                      _______,   _______,   _______,   _______,   _______,   _______,   KC_TRNS,
+    KC_TRNS,   RM_HUED,   RM_SATD,   RM_VALD,   RM_SPDD,   RM_PREV,   DF(_COLEMAK),                                     _______,   _______,   _______,   _______,   _______,   _______,   KC_TRNS,
     KC_TRNS,   _______,   _______,   _______,   _______,   _______,   _______,                                          _______,   _______,   _______,   _______,   _______,   _______,   KC_TRNS,
-    KC_TRNS,   _______,   _______,   _______,   _______,   _______,   _______,                                          _______,   _______,   _______,   _______,   _______,   _______,   KC_TRNS,
-               _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______,    _______,       _______,   _______,   _______,   _______,   _______,   _______,
+    KC_TRNS,   RM_TOGG,   _______,   RGB_STR,   RGB_SPA,   RGB_REA,   _______,                                          _______,   _______,   _______,   _______,   _______,   _______,   KC_TRNS,
+               _______,   _______,   _______,   _______,   _______,   KC_TRNS,   _______,    KC_TRNS,    _______,       KC_TRNS,   _______,   _______,   _______,   _______,   _______,
                                                                                              _______
 )
 };
@@ -197,12 +215,12 @@ static tap mtap_state = {
   .state = TD_NONE
 };
 void MS_finished (tap_dance_state_t *state, void *user_data) {
-  ltap_state.state = MSMD_dance(state);
+  mtap_state.state = MSMD_dance(state);
   switch (mtap_state.state) {
     case M1_TAP: register_code(KC_BTN3); break;
 //    case DOUBLE_TAP: register_code(KC_G); break;
-    case M1_HOLD: is_drag_scroll    = true; break;
-    case M2_HOLD: pmw33xx_set_cpi(0, (dpi_array[keyboard_config.dpi_config] / 2) ); break;
+    case M1_HOLD: set_scrolling    = true; break;
+    case M2_HOLD: pmw33xx_set_cpi(0, (dpi_array[keyboard_config.dpi_config] / 2)); break;
     default: break;
   }
 }
@@ -210,8 +228,8 @@ void MS_reset (tap_dance_state_t *state, void *user_data) {
   switch (mtap_state.state) {
     case M1_TAP: unregister_code(KC_BTN3); break;
 //    case DOUBLE_TAP: unregister_code(KC_G); break;
-    case M1_HOLD: is_drag_scroll    = false; break;
-    case M2_HOLD:  pmw33xx_set_cpi(0, dpi_array[keyboard_config.dpi_config] ); break;
+    case M1_HOLD: set_scrolling    = false; break;
+    case M2_HOLD:  pmw33xx_set_cpi(0, (dpi_array[keyboard_config.dpi_config])); break;
     default: break;
   }
   mtap_state.state = TD_NONE;
@@ -223,7 +241,7 @@ static tap ltap_state = {
     .state = TD_NONE
   };
   void LL_finished (tap_dance_state_t *state, void *user_data) {
-    rtap_state.state = LAYL_dance(state);  
+    ltap_state.state = LAYL_dance(state);  
     switch (ltap_state.state) {
   //    case SINGLE_TAP: register_code(KC_SPC); break;
   //    case DOUBLE_TAP: register_code(KC_G); break;
@@ -279,10 +297,15 @@ tap_dance_action_t tap_dance_actions[] = {
   [MSMD]     = ACTION_TAP_DANCE_FN_ADVANCED(NULL,MS_finished, MS_reset)
 };
 
-//moust button swapper for layer keys. 
+//macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-      case MS_LTR:
+      case DRAG_SCROLL:
+      // Toggle set_scrolling when DRAG_SCROLL key is pressed or released
+        set_scrolling = record->event.pressed;
+      break;
+
+      case MS_LTR: //swaps right click for left click if right layer switch held
         if (record->event.pressed) {
             if (rtap_state.state != TD_NONE){
               register_code(KC_BTN2);
@@ -294,7 +317,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
 
-      case MS_RTL:
+      case MS_RTL: //swaps left click for right click if right layer switch held
         if (record->event.pressed) {
             if (rtap_state.state != TD_NONE){
               register_code(KC_BTN1);
@@ -305,6 +328,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             // when keycode is released
         }
         break;
+      case RGB_STR:
+        if (record->event.pressed) {
+            register_code(RGB_MATRIX_STARLIGHT_DUAL_HUE);
+        }
+        break;
+      case RGB_SPA:
+        if (record->event.pressed) {
+            register_code(RGB_MATRIX_SPLASH);
+        }
+        break;
+      case RGB_REA:
+        if (record->event.pressed) {
+            register_code(RGB_MATRIX_SOLID_REACTIVE);
+        }
+        break;
+
     }
   return true;
 }
@@ -324,7 +363,22 @@ void post_process_record_user(uint16_t keycode, keyrecord_t *record) {
         unregister_code(KC_BTN2);
     }
     break;
-  
+    case RGB_STR:
+    if (!record->event.pressed) {
+        unregister_code(RGB_MATRIX_STARLIGHT_DUAL_HUE);
+    }
+    break;
+  case RGB_SPA:
+    if (!record->event.pressed) {
+        unregister_code(RGB_MATRIX_SPLASH);
+    }
+    break;
+  case RGB_REA:
+    if (!record->event.pressed) {
+        unregister_code(RGB_MATRIX_SOLID_REACTIVE);
+    }
+    break;
+
   }
 };
 /*

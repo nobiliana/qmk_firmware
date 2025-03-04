@@ -65,3 +65,15 @@ const uint8_t music_map[MATRIX_ROWS][MATRIX_COLS] = LAYOUT_rockon(
                                             0
 );
 #endif
+
+#ifndef DPI_OPTIONS
+#    define DPI_OPTIONS \
+        { 400, 900, 1200, 1600 }
+#    ifndef DPI_DEFAULT
+#        define DPI_DEFAULT 1
+#    endif
+#endif
+
+keyboard_config_t keyboard_config;
+uint16_t          dpi_array[] = DPI_OPTIONS;
+#define DPI_OPTION_SIZE (sizeof(dpi_array) / sizeof(uint16_t))

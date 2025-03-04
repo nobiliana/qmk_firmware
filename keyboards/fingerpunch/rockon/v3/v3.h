@@ -47,3 +47,14 @@
     { K70, K77, K72, K74, K75, K76, K73, K71 }, \
     { K80, K87, K82, K84, K85, K86, K83, K81 } \
 }
+
+typedef union {
+    uint32_t raw;
+    struct {
+        uint8_t dpi_config;
+    };
+} keyboard_config_t;
+_Static_assert(sizeof(keyboard_config_t) == sizeof(uint32_t), "keyboard_config_t size mismatch compared to EEPROM area");
+
+extern keyboard_config_t keyboard_config;
+extern uint16_t          dpi_array[];
