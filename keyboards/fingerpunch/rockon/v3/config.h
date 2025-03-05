@@ -68,11 +68,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   // Note that you need to solder the jumper on the pcb and remove teh audio buzzer from the pcb if using the center encoder
   
   #ifdef AUDIO_ENABLE
-      #define ENCODERS_PAD_A {C7, D5}
-      #define ENCODERS_PAD_B {D2, B7}
+      #define ENCODERS_A_PINS {C7, D5}
+      #define ENCODERS_B_PINS {D2, B7}
   #else
-      #define ENCODERS_PAD_A {C7, D5, F1}
-      #define ENCODERS_PAD_B {D2, B7, F0}
+      #define ENCODERS_A_PINS {C7, D5, F1}
+      #define ENCODERS_B_PINS {D2, B7, F0}
   #endif
   
   #ifdef AUDIO_ENABLE

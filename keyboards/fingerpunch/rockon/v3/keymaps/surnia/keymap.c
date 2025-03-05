@@ -65,7 +65,7 @@ enum td_keycodes {
 bool set_scrolling = false;
 
 // Modify these values to adjust the scrolling speed
-#define SCROLL_DIVISOR_H 12.0
+#define SCROLL_DIVISOR_H 20.0
 #define SCROLL_DIVISOR_V 4.0
 
 // Variables to store accumulated scroll values
@@ -78,7 +78,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     if (set_scrolling) {
         // Calculate and accumulate scroll values based on mouse movement and divisors
         scroll_accumulated_h += (float)mouse_report.x / SCROLL_DIVISOR_H;
-        scroll_accumulated_v += (float)mouse_report.y / SCROLL_DIVISOR_V;
+        scroll_accumulated_v -= (float)mouse_report.y / SCROLL_DIVISOR_V; //negative to invert scroll.
 
         // Assign integer parts of accumulated scroll values to the mouse report
         mouse_report.h = (int8_t)scroll_accumulated_h;
@@ -105,7 +105,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,    KC_Q,      KC_W,      KC_E,      KC_R,      KC_T,      KC_MINS,                                          KC_EQL,    KC_Y,      KC_U,      KC_I,      KC_O,      KC_P,      KC_BSPC,
     KC_LCTL,   KC_A,      KC_S,      KC_D,      KC_F,      KC_G,      KC_GRV,                                           KC_QUOT,   KC_H,      KC_J,      KC_K,      KC_L,      KC_SCLN,   KC_ENT,
     KC_LSFT,   KC_Z,      KC_X,      KC_C,      KC_V,      KC_B,      KC_HOME,                                          KC_END,    KC_N,      KC_M,      KC_COMM,   KC_DOT,    KC_SLSH,   KC_RSFT,
-               KC_NO,     KC_NO,     KC_NO,    TD(ALTGUI), KC_SPC,    TD(LAYL),  MS_LTR,     TD(MSMD),   MS_RTL,        TD(LAYR),  KC_SPC,    KC_RCTL,   KC_NO,     KC_NO,     KC_NO,
+               KC_A,      KC_NO,     KC_NO,    TD(ALTGUI), KC_SPC,    TD(LAYL),  MS_LTR,     TD(MSMD),   MS_RTL,        TD(LAYR),  KC_SPC,    KC_RCTL,   KC_NO,     KC_NO,     KC_A,
                                                                                               KC_MUTE
 ),
 
@@ -115,7 +115,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,    KC_Q,      KC_W,      KC_F,      KC_P,      KC_B,      KC_MINS,                                          KC_EQL,    KC_J,      KC_L,      KC_U,      KC_Y,      KC_SCLN,   KC_BSPC,
     KC_LCTL,   KC_A,      KC_R,      KC_S,      KC_T,      KC_G,      KC_GRV,                                           KC_QUOT,   KC_M,      KC_N,      KC_E,      KC_I,      KC_O,      KC_ENT,
     KC_LSFT,   KC_Z,      KC_X,      KC_C,      KC_D,      KC_V,      KC_HOME,                                          KC_END,    KC_K,      KC_H,      KC_COMM,   KC_DOT,    KC_SLSH,   KC_RSFT,
-               KC_NO,     KC_NO,     KC_NO,    TD(ALTGUI), KC_SPC,    TD(LAYL),  MS_LTR,     TD(MSMD),   MS_RTL,        TD(LAYR),  KC_SPC,    KC_RCTL,   KC_NO,     KC_NO,     KC_NO,
+               KC_A,      KC_NO,     KC_NO,    TD(ALTGUI), KC_SPC,    TD(LAYL),  MS_LTR,     TD(MSMD),   MS_RTL,        TD(LAYR),  KC_SPC,    KC_RCTL,   KC_NO,     KC_NO,     KC_A,
                                                                                               KC_MUTE
 ),
 
@@ -125,7 +125,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRNS,   _______,   _______,   KC_PGUP,   KC_GRV,    _______,   _______,                                          C(KC_C),   KC_P7,     KC_P8,     KC_P9,     KC_P0,     KC_PENT,   KC_DEL,
     KC_TRNS,   _______,   KC_HOME,   KC_PGDN,   KC_END,    _______,   _______,                                          C(KC_V),   KC_P4,     KC_P5,     KC_P6,     KC_PPLS,   KC_PAST,   KC_BSLS,
     KC_TRNS,   _______,   KC_SLSH,   KC_MINS,   KC_EQL,    KC_DEL,    _______,                                          C(KC_F),   KC_P1,     KC_P2,     KC_P3,     KC_PMNS,   KC_PSLS,   KC_TRNS,
-               _______,   _______,   _______,   _______,   _______,   KC_TRNS,   _______,    KC_TRNS,    _______,       KC_TRNS,   _______,   _______,   _______,   _______,   _______,
+               _______,   _______,   _______,   _______,   _______,   KC_TRNS,   _______,    KC_TRNS,    _______,       KC_TRNS,   KC_PDOT,   _______,   _______,   _______,   _______,
                                                                                              _______
 ),
 
@@ -151,11 +151,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #if defined(ENCODER_MAP_ENABLE)
 //Left encoder, middle encoder, right encoder, mouse bottom encoder.
 const uint16_t PROGMEM encoder_map[][2][2] = {
-    [_QWERTY] = { ENCODER_CCW_CW(KC_LEFT, KC_RGHT), ENCODER_CCW_CW(KC_UP, KC_DOWN)},
-    [_COLEMAK] = { ENCODER_CCW_CW(KC_LEFT, KC_RGHT), ENCODER_CCW_CW(KC_UP, KC_DOWN)},
-    [_LOWER] =  { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS)},
-    [_RAISE] =  { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS)},
-    [_ADJUST] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS)},
+    [0] = { ENCODER_CCW_CW(KC_LEFT, KC_RGHT), ENCODER_CCW_CW(KC_UP, KC_DOWN)},
+    [1] = { ENCODER_CCW_CW(KC_LEFT, KC_RGHT), ENCODER_CCW_CW(KC_UP, KC_DOWN)},
+    [2] =  { ENCODER_CCW_CW(KC_LEFT, KC_RGHT), ENCODER_CCW_CW(KC_UP, KC_DOWN)},
+    [3] =  { ENCODER_CCW_CW(KC_LEFT, KC_RGHT), ENCODER_CCW_CW(KC_UP, KC_DOWN)},
+    [4] =  { ENCODER_CCW_CW(KC_LEFT, KC_RGHT), ENCODER_CCW_CW(KC_UP, KC_DOWN)},
 };
 #endif
 
