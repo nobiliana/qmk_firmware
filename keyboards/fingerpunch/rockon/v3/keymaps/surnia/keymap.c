@@ -65,7 +65,7 @@ enum td_keycodes {
 bool set_scrolling = false;
 
 // Modify these values to adjust the scrolling speed
-#define SCROLL_DIVISOR_H 20.0
+#define SCROLL_DIVISOR_H 60.0
 #define SCROLL_DIVISOR_V 4.0
 
 // Variables to store accumulated scroll values
@@ -122,8 +122,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_LOWER] = LAYOUT_rockon(
     KC_TRNS,   _______,   _______,   _______,   _______,   _______,   _______,                                          _______,   _______,   _______,   _______,   _______,   _______,   KC_TRNS,
-    KC_TRNS,   _______,   _______,   KC_PGUP,   KC_GRV,    _______,   _______,                                          C(KC_C),   KC_P7,     KC_P8,     KC_P9,     KC_P0,     KC_PENT,   KC_DEL,
-    KC_TRNS,   _______,   KC_HOME,   KC_PGDN,   KC_END,    _______,   _______,                                          C(KC_V),   KC_P4,     KC_P5,     KC_P6,     KC_PPLS,   KC_PAST,   KC_BSLS,
+    KC_TRNS,   KC_GRV,    KC_HOME,   KC_UP,     KC_END,    KC_PGUP,   _______,                                          C(KC_C),   KC_P7,     KC_P8,     KC_P9,     KC_P0,     KC_PENT,   KC_DEL,
+    KC_TRNS,   _______,   KC_LEFT,   KC_DOWN,   KC_RGHT,   KC_PGDN,   _______,                                          C(KC_V),   KC_P4,     KC_P5,     KC_P6,     KC_PPLS,   KC_PAST,   KC_BSLS,
     KC_TRNS,   _______,   KC_SLSH,   KC_MINS,   KC_EQL,    KC_DEL,    _______,                                          C(KC_F),   KC_P1,     KC_P2,     KC_P3,     KC_PMNS,   KC_PSLS,   KC_TRNS,
                _______,   _______,   _______,   _______,   _______,   KC_TRNS,   _______,    KC_TRNS,    _______,       KC_TRNS,   KC_PDOT,   _______,   _______,   _______,   _______,
                                                                                              _______
@@ -148,7 +148,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 )
 };
 
-#if defined(ENCODER_MAP_ENABLE)
+/*#ifdef ENCODER_MAP_ENABLE
 //Left encoder, middle encoder, right encoder, mouse bottom encoder.
 const uint16_t PROGMEM encoder_map[][2][2] = {
     [0] = { ENCODER_CCW_CW(KC_LEFT, KC_RGHT), ENCODER_CCW_CW(KC_UP, KC_DOWN)},
@@ -158,7 +158,27 @@ const uint16_t PROGMEM encoder_map[][2][2] = {
     [4] =  { ENCODER_CCW_CW(KC_LEFT, KC_RGHT), ENCODER_CCW_CW(KC_UP, KC_DOWN)},
 };
 #endif
+*/
 
+
+  bool encoder_update_user(uint8_t index, bool clockwise) {
+    if (index == 0) { /* First encoder */
+        if (clockwise) {
+          tap_code(KC_RIGHT);
+        } else {
+          tap_code(KC_LEFT);
+        }
+    } else if (index == 1) { /* Second encoder */
+        if (clockwise) {
+          tap_code(KC_DOWN);
+        } else {
+          tap_code(KC_UP);
+        }
+    }
+    return false;
+  }
+
+  
 tappy_dance MSMD_dance (tap_dance_state_t *state) {
     switch (state->count) {
     case 1:

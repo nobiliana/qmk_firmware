@@ -131,6 +131,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   #define PMW33XX_CS_PIN B5
   #define PMW33XX_CS_DIVISOR 8 // needs to be the same as the SHIFTREG_DIVISOR above
   #define POINTING_DEVICE_INVERT_Y
+  #define ENCODERS_A_PINS {C7, D5}
+  #define ENCODERS_B_PINS {D2, B7}
 //#endif
 
 #include "keyboards/fingerpunch/src/config_post.h"
